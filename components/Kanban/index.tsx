@@ -10,7 +10,7 @@ import {
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
-import AddTaskButton from "../AddTaskButton";
+import AddTaskButton from "../AddColumnButton";
 import { Column, Id, Task } from "@/type";
 import { useMemo, useState } from "react";
 import { SortableContext, arrayMove } from "@dnd-kit/sortable";
@@ -19,6 +19,7 @@ import { createPortal } from "react-dom";
 import ColumnContainer from "../ColumnContainer";
 import TaskCard from "../Task";
 import { cn } from "@/lib/utils";
+import AddColumnButton from "../AddColumnButton";
 
 function generateId() {
   return Math.floor(Math.random() * 10001);
@@ -189,17 +190,7 @@ const Kanban = () => {
             ))}
           </SortableContext>
         </div>
-        <div
-          onClick={() => {
-            createNewColumn();
-          }}
-          className={cn(
-            "h-20 min-w-80 cursor-pointer rounded-lg bg-slate-200 border-2 p-4 flex gap-2 items-center",
-            "w-[var(--column-width)]"
-          )}
-        >
-          Add Column
-        </div>
+        <AddColumnButton onClick={createNewColumn} />
       </div>
 
       {createPortal(
