@@ -11,7 +11,7 @@ interface Props {
 
 function TaskCard({ task, deleteTask, updateTask }: Props) {
   const [mouseIsOver, setMouseIsOver] = useState(false);
-  const [editMode, setEditMode] = useState(true);
+  const [editMode, setEditMode] = useState(false);
 
   const {
     setNodeRef,
@@ -44,8 +44,10 @@ function TaskCard({ task, deleteTask, updateTask }: Props) {
       <div
         ref={setNodeRef}
         style={style}
-        className="opacity-30 bg-mainBackgroundColor p-2.5 h-[100px] min-h-[100px] items-center flex text-left rounded-xl border-2 cursor-grab relative"
-      />
+        className="opacity-30 bg-mainBackgroundColor p-2 h-[100px] min-h-[100px] items-center flex text-left rounded-md border-2 cursor-grab relative"
+      >
+        <div>Dragging</div>
+      </div>
     );
   }
 
@@ -56,21 +58,23 @@ function TaskCard({ task, deleteTask, updateTask }: Props) {
         style={style}
         {...attributes}
         {...listeners}
-        className="bg-white p-4 h-[100px] min-h-[100px] items-center flex text-left rounded-xl hover:ring-2 hover:ring-inset hover:ring-rose-500 cursor-grab relative"
+        onBlur={toggleEditMode}
+        className="bg-white p-4 h-[100px] min-h-[100px] items-center flex text-left rounded-md cursor-grab relative"
       >
-        <textarea
-          className="h-[90%] w-full resize-none border-none rounded bg-transparent text-white focus:outline-none"
-          value={task.content}
-          autoFocus
-          placeholder="Task content here"
-          onBlur={toggleEditMode}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" && e.shiftKey) {
-              toggleEditMode();
-            }
-          }}
-          onChange={(e) => updateTask(task.id, e.target.value)}
-        />
+        {/* <textarea
+            className="h-[90%] w-full resize-none border-none rounded bg-transparent text-white focus:outline-none"
+            value={task.content}
+            autoFocus
+            placeholder="Task content here"
+            onBlur={toggleEditMode}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && e.shiftKey) {
+                toggleEditMode();
+              }
+            }}
+            onChange={(e) => updateTask(task.id, e.target.value)}
+          /> */}
+        Editing
       </div>
     );
   }
@@ -82,7 +86,7 @@ function TaskCard({ task, deleteTask, updateTask }: Props) {
       {...attributes}
       {...listeners}
       onClick={toggleEditMode}
-      className="bg-white p-2 h-[100px] min-h-[100px] items-center flex text-left rounded-xl cursor-grab relative task"
+      className="bg-white p-2 h-[100px] min-h-[100px] items-center flex text-left rounded-md cursor-grab relative task"
       onMouseEnter={() => {
         setMouseIsOver(true);
       }}
@@ -90,21 +94,20 @@ function TaskCard({ task, deleteTask, updateTask }: Props) {
         setMouseIsOver(false);
       }}
     >
-      <p className="my-auto h-[90%] w-full overflow-y-auto overflow-x-hidden whitespace-pre-wrap text-black">
+      {/* <p className="my-auto h-[90%] w-full overflow-y-auto overflow-x-hidden whitespace-pre-wrap text-black">
         {task.content}
-      </p>
-
-      {mouseIsOver && (
+      </p> */}
+      {/* {mouseIsOver && (
         <button
           onClick={() => {
             deleteTask(task.id);
           }}
           className="absolute right-4 top-1/2 -translate-y-1/2 p-2 rounded opacity-60 hover:opacity-100"
         >
-          {/* <TrashIcon /> */}
           Delete
         </button>
-      )}
+      )} */}
+      Content
     </div>
   );
 }

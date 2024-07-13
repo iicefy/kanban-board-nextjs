@@ -83,3 +83,5 @@ export const defaultTasks: Task[] = [
     content: "Design and implement responsive UI",
   },
 ];
+
+export const COLUMN_WIDTH = "2000px";

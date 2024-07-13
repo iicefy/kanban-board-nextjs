@@ -1,38 +1,35 @@
 import { Column, Id, Task } from "@/type";
 import { SortableContext, useSortable } from "@dnd-kit/sortable";
-// import TrashIcon from "../icons/TrashIcon";
-// import { Column, Id, Task } from "../types";
 import { CSS } from "@dnd-kit/utilities";
 import { useMemo, useState } from "react";
 import TaskCard from "../Task";
-// import PlusIcon from "../icons/PlusIcon";
-// import TaskCard from "./TaskCard";
-
+import { cn } from "@/lib/utils";
+import { COLUMN_WIDTH } from "@/constant";
 interface Props {
   column: Column;
   deleteColumn: (id: Id) => void;
   updateColumn: (id: Id, title: string) => void;
 
   //   createTask: (columnId: Id) => void;
-  //   updateTask: (id: Id, content: string) => void;
-  //   deleteTask: (id: Id) => void;
-  //   tasks: Task[];
+  updateTask: (id: Id, content: string) => void;
+  deleteTask: (id: Id) => void;
+  tasks: Task[];
 }
 
 function ColumnContainer({
   column,
   deleteColumn,
   updateColumn,
+  tasks,
+  deleteTask,
+  updateTask,
 }: //   createTask,
-//   tasks,
-//   deleteTask,
-//   updateTask,
 Props) {
   const [editMode, setEditMode] = useState(false);
 
-  //   const tasksIds = useMemo(() => {
-  //     return tasks.map((task) => task.id);
-  //   }, [tasks]);
+  const tasksIds = useMemo(() => {
+    return tasks.map((task) => task.id);
+  }, [tasks]);
 
   const {
     setNodeRef,
@@ -60,12 +57,11 @@ Props) {
       <div
         ref={setNodeRef}
         style={style}
-        className="
-            w-80 min-h-full cursor-pointer rounded-lg 
-            border-2 border-slate-200 p-4 
-            flex gap-2 items-center
-        "
-      ></div>
+        className={cn(
+          "w-[var(--column-width)]",
+          "min-h-full cursor-pointer rounded-lg border-2 border-slate-200 p-4 flex gap-2 items-center"
+        )}
+      />
     );
   }
 
@@ -73,7 +69,10 @@ Props) {
     <div
       ref={setNodeRef}
       style={style}
-      className="w-80 min-h-full rounded-lg flex flex-col bg-slate-200 p-2"
+      className={cn(
+        "w-[var(--column-width)]",
+        "min-h-full rounded-lg flex flex-col bg-slate-200 p-2"
+      )}
     >
       <div
         {...attributes}
@@ -81,7 +80,7 @@ Props) {
         onClick={() => {
           setEditMode(true);
         }}
-        className="bg-slate-100 text-md cursor-grab rounded-md p-4 flex items-center justify-between"
+        className="bg-slate-100 text-md cursor-grab rounded-md p-4 flex items-center justify-between mb-4"
       >
         <div className="flex gap-2">
           {!editMode && column.title}
@@ -112,7 +111,7 @@ Props) {
       </div>
 
       {/* Column task container */}
-      {/* <div className="flex flex-grow flex-col gap-4 p-2 overflow-x-hidden overflow-y-auto">
+      <div className="flex flex-grow flex-col gap-2 overflow-x-hidden overflow-y-auto">
         <SortableContext items={tasksIds}>
           {tasks.map((task) => (
             <TaskCard
@@ -123,7 +122,7 @@ Props) {
             />
           ))}
         </SortableContext>
-      </div> */}
+      </div>
       {/* Column footer */}
       {/* <button
         className="flex gap-2 items-center border-columnBackgroundColor border-2 rounded-md p-4 hover:bg-mainBackgroundColor hover:text-rose-500 active:bg-black"

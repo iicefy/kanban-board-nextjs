@@ -18,6 +18,7 @@ import { defaultCols, defaultTasks } from "@/constant";
 import { createPortal } from "react-dom";
 import ColumnContainer from "../ColumnContainer";
 import TaskCard from "../Task";
+import { cn } from "@/lib/utils";
 
 function generateId() {
   return Math.floor(Math.random() * 10001);
@@ -28,7 +29,7 @@ const Kanban = () => {
   const columnsId = useMemo(() => columns.map((col) => col.id), [columns]);
   const [tasks, setTasks] = useState<Task[]>(defaultTasks);
   const [activeColumn, setActiveColumn] = useState<Column | null>(null);
-  //   const [activeTask, setActiveTask] = useState<Task | null>(null);
+  const [activeTask, setActiveTask] = useState<Task | null>(null);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -48,19 +49,19 @@ const Kanban = () => {
   //     setTasks([...tasks, newTask]);
   //   }
 
-  //   function deleteTask(id: Id) {
-  //     const newTasks = tasks.filter((task) => task.id !== id);
-  //     setTasks(newTasks);
-  //   }
+  function deleteTask(id: Id) {
+    const newTasks = tasks.filter((task) => task.id !== id);
+    setTasks(newTasks);
+  }
 
-  //   function updateTask(id: Id, content: string) {
-  //     const newTasks = tasks.map((task) => {
-  //       if (task.id !== id) return task;
-  //       return { ...task, content };
-  //     });
+  function updateTask(id: Id, content: string) {
+    const newTasks = tasks.map((task) => {
+      if (task.id !== id) return task;
+      return { ...task, content };
+    });
 
-  //     setTasks(newTasks);
-  //   }
+    setTasks(newTasks);
+  }
 
   function createNewColumn() {
     const columnToAdd: Column = {
@@ -94,10 +95,10 @@ const Kanban = () => {
       return;
     }
 
-    // if (event.active.data.current?.type === "Task") {
-    //   setActiveTask(event.active.data.current.task);
-    //   return;
-    // }
+    if (event.active.data.current?.type === "Task") {
+      setActiveTask(event.active.data.current.task);
+      return;
+    }
   }
 
   function onDragEnd(event: DragEndEvent) {
@@ -171,7 +172,7 @@ const Kanban = () => {
       onDragEnd={onDragEnd}
       onDragOver={onDragOver}
     >
-      <div className="flex gap-4 bg-slate-500 p-4 w-full overflow-x-auto h-[calc(100vh-5rem)]">
+      <div className="flex gap-4 bg-slate-100 p-4 w-full overflow-x-auto h-[calc(100vh-5rem)]">
         <div className="flex gap-4 ">
           <SortableContext items={columnsId}>
             {columns.map((col) => (
@@ -181,9 +182,9 @@ const Kanban = () => {
                 deleteColumn={deleteColumn}
                 updateColumn={updateColumn}
                 // createTask={createTask}
-                // deleteTask={deleteTask}
-                // updateTask={updateTask}
-                // tasks={tasks.filter((task) => task.columnId === col.id)}
+                deleteTask={deleteTask}
+                updateTask={updateTask}
+                tasks={tasks.filter((task) => task.columnId === col.id)}
               />
             ))}
           </SortableContext>
@@ -192,13 +193,12 @@ const Kanban = () => {
           onClick={() => {
             createNewColumn();
           }}
-          className="
-            h-20 min-w-80 cursor-pointer rounded-lg 
-            bg-slate-200 border-2 p-4 
-            flex gap-2 items-center
-          "
+          className={cn(
+            "h-20 min-w-80 cursor-pointer rounded-lg bg-slate-200 border-2 p-4 flex gap-2 items-center",
+            "w-[var(--column-width)]"
+          )}
         >
-          <h2 className="text-xl font-semibold">Add Column</h2>
+          Add Column
         </div>
       </div>
 
@@ -210,18 +210,18 @@ const Kanban = () => {
               deleteColumn={deleteColumn}
               updateColumn={updateColumn}
               //   createTask={createTask}
-              //   deleteTask={deleteTask}
-              //   updateTask={updateTask}
-              //   tasks={tasks.filter((task) => task.columnId === activeColumn.id)}
+              deleteTask={deleteTask}
+              updateTask={updateTask}
+              tasks={tasks.filter((task) => task.columnId === activeColumn.id)}
             />
           )}
-          {/* {activeTask && (
+          {activeTask && (
             <TaskCard
               task={activeTask}
               deleteTask={deleteTask}
               updateTask={updateTask}
             />
-          )} */}
+          )}
         </DragOverlay>,
         document.body
       )}
